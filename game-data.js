@@ -6,6 +6,13 @@
 const GAME_CONFIG = {
   title: "巧言令色",
   subtitle: "How to Lie Without Lying",
+  // 产品设定
+  product: {
+    name: "启航",
+    fullName: "启航·智能招聘评估系统",
+    slogan: "让每个人凭实力获得机会",
+    description: "AI驱动的招聘筛选系统，通过分析简历、面试表现、社交媒体，为HR提供「客观」的候选人评分。"
+  },
   intro: [
     "人很少直接说谎。",
     "真正高明的方式，是先说服自己。",
@@ -25,28 +32,57 @@ const GAME_CONFIG = {
 const CHARACTERS = {
   player: {
     name: "你",
-    title: "项目经理",
-    color: "#e8e6e3"
+    title: "启航项目经理",
+    color: "#e8e6e3",
+    backstory: "五年前，你被上一家公司裁员。王总把你挖过来，给了你第二次机会。你参与了「启航」系统的核心算法设计——包括那个「院校权重」的参数设定。"
   },
   boss: {
     name: "王总",
     title: "部门总监",
-    color: "#c9a86c"
+    color: "#c9a86c",
+    fullName: "王建国",
+    backstory: "五年前，他从外包把你挖进来。那时候你刚被裁员，是他给了你机会。他不只是领导，还是那个见过你最狼狈样子的人。",
+    relationship: "他不只是想找一个替罪羊。他想找一个他能接受的交代。"
   },
   subordinate: {
     name: "小林",
-    title: "你的下属",
-    color: "#7eb8da"
+    title: "算法工程师",
+    color: "#7eb8da",
+    fullName: "林志远",
+    backstory: "三年前你面试了他。他刚毕业，二本学校，紧张到说话结巴。HR说不行，你说「他可以，我来带」。他一直把你当导师。",
+    relationship: "他是你一手带出来的人。这次bug是他发现的——系统的「院校权重」参数异常，导致一批候选人被错误降分。"
   },
   colleague: {
     name: "陈静",
     title: "产品经理",
-    color: "#d4a5c9"
+    color: "#d4a5c9",
+    backstory: "一年前，你们一起做过「蓝海项目」。那个项目也出了问题，你们互相掩护，最后没事。你知道她的一些事，她也知道你的。",
+    relationship: "「启航」的产品需求是她写的。那个「综合评估」的功能，最初是她提的。"
   },
   hr: {
     name: "老张",
     title: "HR经理",
-    color: "#a8c9a8"
+    color: "#a8c9a8",
+    backstory: "他在公司十年了，见过太多人来人往。他不是你的敌人，但他也不会主动帮你。",
+    relationship: "他在观望风向。如果你倒了，他会走流程。"
+  },
+  // 新增：表弟
+  cousin: {
+    name: "表弟",
+    title: "今年毕业",
+    color: "#d4a574",
+    fullName: "李明",
+    backstory: "你舅舅的儿子，二本学校，计算机专业。今年毕业，在找工作。从小就崇拜你，觉得你在大城市做「AI」很厉害。",
+    relationship: "他投了几十家公司，都是秒拒。他不知道，可能是你参与设计的系统把他筛掉了。"
+  },
+  // 新增：大学老师
+  professor: {
+    name: "周老师",
+    title: "大学教授",
+    color: "#8b7355",
+    fullName: "周文彬",
+    backstory: "你大学时的导师，现在研究AI伦理。你们一直有联系，他会给你发一些关于算法偏见的论文。",
+    relationship: "他不知道你参与设计的系统存在这些问题。他一直以为你在做「有社会价值」的产品。"
   },
   narrator: {
     name: "",
@@ -95,26 +131,518 @@ const SCENES = {
     id: "intro",
     type: "narration",
     content: [
-      "三个月前，公司启动了「北极星项目」。你是项目负责人。",
-      "这是你升职后的第一个大项目。",
+      "「启航」——智能招聘评估系统。",
+      "公司的旗舰产品，你负责的项目。",
       "",
-      "现在，项目失败了。",
-      "预算超支，上线延期，最终产品出现重大bug，导致客户损失。",
+      "宣传语是：让每个人凭实力获得机会。",
       "",
-      "今天，王总要找你谈话。",
+      "......",
       "",
-      "你知道一件事：",
-      "那个bug，小林早在两周前就报告给了你。",
-      "你没有优先处理。",
-      "然后你——",
+      "五年前，你被上一家公司裁员。王总把你挖过来，给了你第二次机会。",
       "",
-      "......忘了。",
+      "三年前，你面试了小林。他二本学校，紧张到结巴。HR说不行，你说「他可以，我来带」。",
       "",
-      "现在，你要决定：",
-      "如何解释这一切。"
+      "一年前，你和陈静做过「蓝海项目」。出了问题，你们互相掩护。她说：「我们是同一条船上的人。」",
+      "",
+      "......",
+      "",
+      "六个月前，「启航」项目启动。",
+      "你参与了核心算法的设计——包括那个「综合评估」的参数。",
+      "",
+      "你知道那个参数意味着什么。",
+      "你也知道，如果被人发现意味着什么。",
+      "",
+      "三天前，小林发来一封邮件：",
+      "「系统有个bug，院校权重参数异常，导致一批候选人被错误降分。」",
+      "",
+      "你看了那批被降分的名单。",
+      "里面有一些名字，让你......不太舒服。",
+      "",
+      "今天周一，早上九点。",
+      "周会。"
     ],
     choices: [
-      { text: "推门进去", nextScene: "d1_boss_office_enter" }
+      { text: "走进会议室", nextScene: "d1_morning_meeting" }
+    ]
+  },
+
+  // ═══════════════════════════════════════════
+  // 第一天：问题浮现
+  // ═══════════════════════════════════════════
+
+  // ----------------------------------------
+  // 1.1 周会 - bug问题被提出
+  // ----------------------------------------
+  d1_morning_meeting: {
+    id: "d1_morning_meeting",
+    type: "dialogue",
+    location: "会议室",
+    content: [
+      { speaker: "narrator", text: "会议室里已经有几个人了。小林坐在角落，陈静在看手机，还有两个技术同事。" },
+      { speaker: "narrator", text: "王总最后进来，在主位坐下。" },
+      { speaker: "boss", text: "开始吧。启航项目，这周的情况？" },
+      { speaker: "narrator", text: "所有人的目光都投向你。" },
+      { speaker: "player", text: "整体......还在推进中。" },
+      { speaker: "boss", text: "我听说系统出了点问题？有关院校权重的？" },
+      { speaker: "narrator", text: "你的心跳漏了一拍。王总知道了。" },
+      { speaker: "narrator", text: "小林在角落里低着头，不敢看你。" }
+    ],
+    choices: [
+      {
+        text: "\"是一个小bug，已经修复了。\"",
+        hint: "轻描淡写",
+        effects: { trust: 0, selfDeception: 10, realityPressure: 5 },
+        nextScene: "d1_meeting_downplay"
+      },
+      {
+        text: "\"院校权重参数出现了异常，我们正在排查原因。\"",
+        hint: "技术性描述",
+        effects: { trust: 5, selfDeception: 5, realityPressure: 3 },
+        nextScene: "d1_meeting_technical"
+      },
+      {
+        text: "\"这件事......比较复杂。会后我跟您单独汇报。\"",
+        hint: "争取时间",
+        effects: { trust: 0, selfDeception: 5, realityPressure: 0 },
+        nextScene: "d1_meeting_delay"
+      }
+    ]
+  },
+
+  // ----------------------------------------
+  // 会议分支：轻描淡写
+  // ----------------------------------------
+  d1_meeting_downplay: {
+    id: "d1_meeting_downplay",
+    type: "dialogue",
+    location: "会议室",
+    content: [
+      { speaker: "player", text: "是一个小bug，已经修复了。" },
+      { speaker: "boss", text: "小bug？" },
+      { speaker: "narrator", text: "王总翻开了面前的文件。" },
+      { speaker: "boss", text: "我这里有一份报告。上周有47个候选人被错误降分。" },
+      { speaker: "boss", text: "其中12个已经收到了拒信。" },
+      { speaker: "narrator", text: "......系统会自动发送拒信。" },
+      { speaker: "narrator", text: "你忘了这件事。" },
+      { speaker: "boss", text: "你觉得这是「小bug」？" }
+    ],
+    choices: [
+      {
+        text: "\"我的意思是，技术层面的问题已经解决了。\"",
+        hint: "技术性转移",
+        effects: { trust: -5, selfDeception: 15, realityPressure: 10 },
+        nextScene: "d1_meeting_end"
+      },
+      {
+        text: "\"......我低估了影响范围。\"",
+        hint: "承认失误",
+        effects: { trust: 5, selfDeception: -5, realityPressure: 5 },
+        nextScene: "d1_meeting_end"
+      }
+    ]
+  },
+
+  // ----------------------------------------
+  // 会议分支：技术性描述
+  // ----------------------------------------
+  d1_meeting_technical: {
+    id: "d1_meeting_technical",
+    type: "dialogue",
+    location: "会议室",
+    content: [
+      { speaker: "player", text: "院校权重参数出现了异常，我们正在排查原因。" },
+      { speaker: "boss", text: "院校权重？" },
+      { speaker: "colleague", text: "王总，院校权重是我们算法的一个参数，用来评估候选人的教育背景。" },
+      { speaker: "narrator", text: "陈静帮你解释了。但王总的表情没有放松。" },
+      { speaker: "boss", text: "我关心的是——有多少人受到了影响？" },
+      { speaker: "narrator", text: "你看向小林。他低着头，轻声说：" },
+      { speaker: "subordinate", text: "......47个候选人。其中12个已经......收到拒信了。" }
+    ],
+    choices: [
+      {
+        text: "\"我们会联系这12个人，安排重新评估。\"",
+        hint: "补救措施",
+        effects: { trust: 10, selfDeception: 0, realityPressure: 5 },
+        nextScene: "d1_meeting_remedy"
+      },
+      {
+        text: "\"拒信是系统自动发送的，这个......技术上很难追溯。\"",
+        hint: "技术性困难",
+        effects: { trust: -10, selfDeception: 10, realityPressure: 10 },
+        nextScene: "d1_meeting_end"
+      }
+    ]
+  },
+
+  // ----------------------------------------
+  // 会议分支：争取时间
+  // ----------------------------------------
+  d1_meeting_delay: {
+    id: "d1_meeting_delay",
+    type: "dialogue",
+    location: "会议室",
+    content: [
+      { speaker: "player", text: "这件事......比较复杂。会后我跟您单独汇报。" },
+      { speaker: "boss", text: "......好。" },
+      { speaker: "narrator", text: "王总看了你一眼，没有追问。" },
+      { speaker: "narrator", text: "会议继续进行。但你能感觉到，有几个人的目光时不时扫向你。" },
+      { speaker: "narrator", text: "陈静在桌下踢了你一下。" },
+      { speaker: "narrator", text: "会议结束后，人群散去。王总叫住了你。" },
+      { speaker: "boss", text: "来我办公室。" }
+    ],
+    choices: [
+      { text: "跟王总去办公室", nextScene: "d1_boss_office_enter" }
+    ]
+  },
+
+  // ----------------------------------------
+  // 会议分支：补救措施
+  // ----------------------------------------
+  d1_meeting_remedy: {
+    id: "d1_meeting_remedy",
+    type: "dialogue",
+    location: "会议室",
+    content: [
+      { speaker: "player", text: "我们会联系这12个人，安排重新评估。" },
+      { speaker: "boss", text: "怎么联系？他们已经收到拒信了。" },
+      { speaker: "colleague", text: "......可以说系统出了点问题，邀请他们重新参加评估。" },
+      { speaker: "narrator", text: "陈静帮你找了个说法。" },
+      { speaker: "boss", text: "那其他35个呢？还没发拒信的那些。" },
+      { speaker: "narrator", text: "你愣了一下。" },
+      { speaker: "boss", text: "他们的评分也是错的。你们打算怎么处理？" }
+    ],
+    choices: [
+      {
+        text: "\"重新评估所有47个候选人。\"",
+        effects: { trust: 10, selfDeception: -5, realityPressure: 5 },
+        nextScene: "d1_meeting_end"
+      },
+      {
+        text: "\"只处理已经收到拒信的12个。其他......按正常流程继续。\"",
+        hint: "最小化影响",
+        effects: { trust: -5, selfDeception: 15, realityPressure: 10 },
+        nextScene: "d1_meeting_end"
+      }
+    ]
+  },
+
+  // ----------------------------------------
+  // 会议结束
+  // ----------------------------------------
+  d1_meeting_end: {
+    id: "d1_meeting_end",
+    type: "narration",
+    location: "会议室",
+    content: [
+      "会议结束了。",
+      "",
+      "你走出会议室，感觉后背有点凉。",
+      "",
+      "这只是一个开始。",
+      "bug的问题还没解决。",
+      "而且......还有另一件事。",
+      "",
+      "你看了那批被降分的名单。",
+      "有一些名字，让你不太舒服。",
+      "",
+      "不是因为bug。",
+      "是因为......他们本来就是被「正常」降分的。"
+    ],
+    choices: [
+      { text: "回到工位", nextScene: "d1_desk" }
+    ]
+  },
+
+  // ----------------------------------------
+  // 1.2 工位 - 表弟的电话
+  // ----------------------------------------
+  d1_desk: {
+    id: "d1_desk",
+    type: "narration",
+    location: "你的工位",
+    content: [
+      "你回到工位，打开电脑。",
+      "",
+      "屏幕上是那批被降分的候选人名单。",
+      "你犹豫了一下，点开了一个名字。",
+      "",
+      "......李明。",
+      "",
+      "不是你表弟。只是同名。",
+      "但你想起过年回家时，表弟问你的那句话：",
+      "",
+      "「哥，你做的那个招聘系统，能不能帮我看看简历？」",
+      "",
+      "手机突然震动。",
+      "是表弟。"
+    ],
+    choices: [
+      { text: "接电话", nextScene: "d1_cousin_call" }
+    ]
+  },
+
+  // ----------------------------------------
+  // 表弟电话
+  // ----------------------------------------
+  d1_cousin_call: {
+    id: "d1_cousin_call",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "narrator", text: "你接起电话。" },
+      { speaker: "cousin", text: "哥，你忙吗？" },
+      { speaker: "player", text: "还行，怎么了？" },
+      { speaker: "cousin", text: "就是......我想问问，你们公司还在招人吗？" },
+      { speaker: "cousin", text: "我投了那么多简历，都是秒拒。" },
+      { speaker: "cousin", text: "我就想，是不是我哪里不行。" },
+      { speaker: "narrator", text: "你沉默了几秒。" },
+      { speaker: "narrator", text: "你知道那些「秒拒」是怎么发生的。" },
+      { speaker: "narrator", text: "系统会先筛选一遍简历。" },
+      { speaker: "narrator", text: "二本学校，没有大厂实习，没有突出项目——" },
+      { speaker: "narrator", text: "系统会给一个「低分」。然后——自动拒信。" },
+      { speaker: "narrator", text: "甚至不会有人类HR看到他的简历。" }
+    ],
+    choices: [
+      {
+        text: "\"你......投了我们公司？\"",
+        effects: { trust: 0, selfDeception: 0, realityPressure: 10 },
+        nextScene: "d1_cousin_reveal"
+      },
+      {
+        text: "\"找工作这种事，有时候就是运气。\"",
+        hint: "模糊回应",
+        effects: { trust: 0, selfDeception: 10, realityPressure: 5 },
+        nextScene: "d1_cousin_vague"
+      },
+      {
+        text: "\"把简历发我，我帮你看看。\"",
+        effects: { trust: 5, selfDeception: -5, realityPressure: 15 },
+        nextScene: "d1_cousin_help"
+      }
+    ]
+  },
+
+  // ----------------------------------------
+  // 表弟分支：投了公司
+  // ----------------------------------------
+  d1_cousin_reveal: {
+    id: "d1_cousin_reveal",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "你......投了我们公司？" },
+      { speaker: "cousin", text: "对啊，两个月前就投了。" },
+      { speaker: "cousin", text: "然后就收到那个自动回复，说不合适。" },
+      { speaker: "cousin", text: "我就想问问，是不是真的不合适，还是系统出问题了？" },
+      { speaker: "narrator", text: "你的心跳漏了一拍。" },
+      { speaker: "narrator", text: "两个月前。" },
+      { speaker: "narrator", text: "那是在bug出现之前。" },
+      { speaker: "narrator", text: "也就是说......他的「不合适」，不是bug造成的。" },
+      { speaker: "narrator", text: "是系统「正常」运行的结果。" }
+    ],
+    choices: [
+      {
+        text: "\"......我帮你查一下。\"",
+        effects: { trust: 5, selfDeception: -10, realityPressure: 20 },
+        nextScene: "d1_cousin_check"
+      },
+      {
+        text: "\"系统没问题。可能......确实是岗位不匹配。\"",
+        hint: "维持谎言",
+        effects: { trust: -10, selfDeception: 20, realityPressure: 10 },
+        nextScene: "d1_cousin_lie"
+      }
+    ]
+  },
+
+  // ----------------------------------------
+  // 表弟分支：模糊回应
+  // ----------------------------------------
+  d1_cousin_vague: {
+    id: "d1_cousin_vague",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "找工作这种事，有时候就是运气。" },
+      { speaker: "cousin", text: "......是啊。" },
+      { speaker: "cousin", text: "但我就是觉得，我好像......" },
+      { speaker: "cousin", text: "算了，不说了。你有空帮我看看简历就行。" },
+      { speaker: "narrator", text: "他的声音有些低落。" },
+      { speaker: "narrator", text: "你知道他在想什么。" },
+      { speaker: "narrator", text: "他从小就崇拜你。他以为你会帮他。" }
+    ],
+    choices: [
+      { text: "挂断电话", nextScene: "d1_after_call" }
+    ]
+  },
+
+  // ----------------------------------------
+  // 表弟分支：帮忙看简历
+  // ----------------------------------------
+  d1_cousin_help: {
+    id: "d1_cousin_help",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "把简历发我，我帮你看看。" },
+      { speaker: "cousin", text: "真的？谢了哥！" },
+      { speaker: "cousin", text: "我就知道你靠谱。" },
+      { speaker: "narrator", text: "他的声音亮了起来。" },
+      { speaker: "narrator", text: "你看着屏幕上的候选人名单。" },
+      { speaker: "narrator", text: "你知道，即使你帮他「看看」，也改变不了什么。" },
+      { speaker: "narrator", text: "除非......你改掉那个参数。" }
+    ],
+    choices: [
+      { text: "挂断电话", nextScene: "d1_after_call" }
+    ]
+  },
+
+  // ----------------------------------------
+  // 表弟分支：查一下
+  // ----------------------------------------
+  d1_cousin_check: {
+    id: "d1_cousin_check",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "......我帮你查一下。" },
+      { speaker: "cousin", text: "真的？谢了哥！" },
+      { speaker: "narrator", text: "你打开后台系统，输入他的名字。" },
+      { speaker: "narrator", text: "李明。" },
+      { speaker: "narrator", text: "找到了。" },
+      { speaker: "narrator", text: "系统评分：42分。" },
+      { speaker: "narrator", text: "院校权重贡献：-15。" },
+      { speaker: "narrator", text: "自动决策：不推荐。" },
+      { speaker: "narrator", text: "拒信发送时间：2024年1月15日，上午10:23。" },
+      { speaker: "narrator", text: "......" },
+      { speaker: "narrator", text: "你看着那个「-15」。" },
+      { speaker: "narrator", text: "这是你参与设定的参数。" }
+    ],
+    choices: [
+      {
+        text: "告诉他真相。",
+        effects: { trust: 10, selfDeception: -20, realityPressure: 25 },
+        nextScene: "d1_cousin_truth"
+      },
+      {
+        text: "\"你简历还不错，可能只是岗位不匹配。\"",
+        hint: "隐瞒",
+        effects: { trust: -5, selfDeception: 15, realityPressure: 15 },
+        nextScene: "d1_cousin_hide"
+      }
+    ]
+  },
+
+  // ----------------------------------------
+  // 表弟分支：告诉真相
+  // ----------------------------------------
+  d1_cousin_truth: {
+    id: "d1_cousin_truth",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "表弟，我查了。" },
+      { speaker: "player", text: "你的简历......是被系统筛掉的。" },
+      { speaker: "cousin", text: "什么意思？" },
+      { speaker: "player", text: "我们有一个算法，会先评估简历。" },
+      { speaker: "player", text: "学校、实习、项目......会打一个分。" },
+      { speaker: "player", text: "低于一定分数，就不会到HR手里。" },
+      { speaker: "cousin", text: "......" },
+      { speaker: "cousin", text: "所以我连被看到的机会都没有？" },
+      { speaker: "narrator", text: "你沉默了。" },
+      { speaker: "cousin", text: "......那我应该怎么办？" }
+    ],
+    choices: [
+      {
+        text: "\"我会想办法帮你。\"",
+        effects: { trust: 15, selfDeception: -10, realityPressure: 20 },
+        nextScene: "d1_after_call"
+      },
+      {
+        text: "\"......我不知道。\"",
+        effects: { trust: 0, selfDeception: -5, realityPressure: 25 },
+        nextScene: "d1_after_call"
+      }
+    ]
+  },
+
+  // ----------------------------------------
+  // 表弟分支：隐瞒
+  // ----------------------------------------
+  d1_cousin_hide: {
+    id: "d1_cousin_hide",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "你简历还不错，可能只是岗位不匹配。" },
+      { speaker: "cousin", text: "......是吗？" },
+      { speaker: "cousin", text: "但我投了那么多公司，都是差不多的回复。" },
+      { speaker: "cousin", text: "我就想，是不是我真的不行。" },
+      { speaker: "narrator", text: "他的声音很低。" },
+      { speaker: "narrator", text: "你知道他在怀疑自己。" },
+      { speaker: "narrator", text: "而你，刚刚选择不告诉他真相。" }
+    ],
+    choices: [
+      { text: "挂断电话", nextScene: "d1_after_call" }
+    ]
+  },
+
+  // ----------------------------------------
+  // 表弟分支：维持谎言
+  // ----------------------------------------
+  d1_cousin_lie: {
+    id: "d1_cousin_lie",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "系统没问题。可能......确实是岗位不匹配。" },
+      { speaker: "cousin", text: "......哦。" },
+      { speaker: "cousin", text: "那我再投投别的地方吧。" },
+      { speaker: "narrator", text: "他的声音很平静。" },
+      { speaker: "narrator", text: "太平静了。" },
+      { speaker: "narrator", text: "你知道他在想什么。" },
+      { speaker: "narrator", text: "他在怀疑自己。" }
+    ],
+    choices: [
+      { text: "挂断电话", nextScene: "d1_after_call" }
+    ]
+  },
+
+  // ----------------------------------------
+  // 电话后
+  // ----------------------------------------
+  d1_after_call: {
+    id: "d1_after_call",
+    type: "narration",
+    location: "你的工位",
+    content: [
+      "你挂断电话。",
+      "",
+      "屏幕上还显示着后台系统。",
+      "系统评分：42分。",
+      "院校权重贡献：-15。",
+      "",
+      "......",
+      "",
+      "这个参数是你参与设定的。",
+      "当初的讨论，你还记得——",
+      "",
+      "「名校的学生，平均水平更高，这是客观事实。」",
+      "「我们需要提高筛选效率。」",
+      "「这只是一个参考，不是决定因素。」",
+      "",
+      "现在，你看着表弟的简历。",
+      "他连被看到的机会都没有。",
+      "",
+      "你想起三年前的小林。",
+      "他也是二本。HR说不行。",
+      "你说「他可以」。",
+      "",
+      "如果当时也是用这个系统......",
+      "小林也不会被看到。"
+    ],
+    choices: [
+      { text: "继续", nextScene: "d1_hallway_xiaolin" }
     ]
   },
 
@@ -1314,7 +1842,173 @@ const SCENES = {
     type: "narration",
     location: "你的工位",
     content: [
-      "你刚坐下，电脑就弹出一条消息。",
+      "你刚坐下，还没来得及打开电脑，有人拍了拍你的肩膀。",
+      "",
+      "是小林。",
+      "",
+      "他手里拿着一杯咖啡，表情有些犹豫。",
+      "不像平时汇报工作的样子。"
+    ],
+    choices: [
+      { text: "\"怎么了？\"", nextScene: "d2_xiaolin_personal" }
+    ]
+  },
+
+  // ----------------------------------------
+  // 小林的私人场景 - 不是功能性，是"人"的时刻
+  // ----------------------------------------
+  d2_xiaolin_personal: {
+    id: "d2_xiaolin_personal",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "怎么了？" },
+      { speaker: "subordinate", text: "......哥，你有空吗？我想跟你聊聊。" },
+      { speaker: "narrator", text: "他叫你「哥」。平时在公司他只叫「领导」。" },
+      { speaker: "narrator", text: "你示意他坐下。" },
+      { speaker: "subordinate", text: "是私事。" },
+      { speaker: "subordinate", text: "我妹妹高考成绩出来了。考得还行，一本线过了。" },
+      { speaker: "narrator", text: "他笑了笑，但笑容很快收敛了。" },
+      { speaker: "subordinate", text: "她想报北京的大学。学费、生活费......家里有点吃紧。" },
+      { speaker: "subordinate", text: "所以我在想......" },
+      { speaker: "narrator", text: "他停了一下，低头看着咖啡杯。" },
+      { speaker: "subordinate", text: "上周有个猎头联系我。另一家公司，薪资涨30%。" },
+      { speaker: "narrator", text: "你愣了一下。" },
+      { speaker: "subordinate", text: "但我还在犹豫。毕竟是您把我带出来的。" },
+      { speaker: "subordinate", text: "三年前，要不是您，我可能连入行的机会都没有。" },
+      { speaker: "narrator", text: "他抬起头，看着你。" },
+      { speaker: "subordinate", text: "哥，你觉得我该去吗？" }
+    ],
+    choices: [
+      {
+        text: "\"去。机会难得，家里需要你。\"",
+        hint: "为他的利益考虑",
+        effects: { trust: 15, selfDeception: -10, realityPressure: 5 },
+        nextScene: "d2_xiaolin_personal_honest"
+      },
+      {
+        text: "\"现在的时机不太好......你走了，项目这边......\"",
+        hint: "为自己的利益考虑",
+        effects: { trust: -10, selfDeception: 15, realityPressure: 0 },
+        nextScene: "d2_xiaolin_personal_selfish"
+      },
+      {
+        text: "\"这是你的人生，你自己决定。\"",
+        hint: "回避",
+        effects: { trust: 0, selfDeception: 5, realityPressure: 5 },
+        nextScene: "d2_xiaolin_personal_neutral"
+      }
+    ]
+  },
+
+  d2_xiaolin_personal_honest: {
+    id: "d2_xiaolin_personal_honest",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "去。机会难得，家里需要你。" },
+      { speaker: "narrator", text: "小林愣了一下，像没想到你会这么说。" },
+      { speaker: "subordinate", text: "......你确定？" },
+      { speaker: "player", text: "你妹妹在北京读书，离家近一点，你也能放心。" },
+      { speaker: "player", text: "30%的涨幅，对现在的你来说，很重要。" },
+      { speaker: "narrator", text: "他沉默了几秒，然后笑了。" },
+      { speaker: "subordinate", text: "谢谢哥。" },
+      { speaker: "subordinate", text: "我就知道......你会为我考虑。" },
+      { speaker: "narrator", text: "他站起身，拍了拍你的肩膀。" },
+      { speaker: "subordinate", text: "不管我去不去，你永远是我领导。" },
+      { speaker: "narrator", text: "......" },
+      { speaker: "narrator", text: "他说的是「领导」，不是「师父」。" },
+      { speaker: "narrator", text: "你不知道为什么，心里有点不是滋味。" }
+    ],
+    choices: [
+      { text: "继续", nextScene: "d2_before_hr" }
+    ]
+  },
+
+  d2_xiaolin_personal_selfish: {
+    id: "d2_xiaolin_personal_selfish",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "现在的时机不太好......你走了，项目这边......" },
+      { speaker: "narrator", text: "你没说完。但小林已经听懂了。" },
+      { speaker: "subordinate", text: "......" },
+      { speaker: "subordinate", text: "我懂了。" },
+      { speaker: "narrator", text: "他的表情没有变化，但眼神里有什么东西消失了。" },
+      { speaker: "subordinate", text: "那......我再考虑考虑吧。" },
+      { speaker: "narrator", text: "他站起身，没再说什么。" },
+      { speaker: "narrator", text: "走了。" },
+      { speaker: "narrator", text: "......" },
+      { speaker: "narrator", text: "你看着他的背影。" },
+      { speaker: "narrator", text: "三年前，你也是这样看着他的——" },
+      { speaker: "narrator", text: "那时候他刚入职，紧张到不敢看你。" },
+      { speaker: "narrator", text: "现在，他只是低着头，走开了。" }
+    ],
+    choices: [
+      { text: "继续", nextScene: "d2_before_hr" }
+    ]
+  },
+
+  d2_xiaolin_personal_neutral: {
+    id: "d2_xiaolin_personal_neutral",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "这是你的人生，你自己决定。" },
+      { speaker: "narrator", text: "小林点了点头，表情有些复杂。" },
+      { speaker: "subordinate", text: "......好。" },
+      { speaker: "subordinate", text: "我再想想。" },
+      { speaker: "narrator", text: "他站起身，犹豫了一下，又坐下来。" },
+      { speaker: "subordinate", text: "哥，我能问你一个问题吗？" },
+      { speaker: "player", text: "什么？" },
+      { speaker: "subordinate", text: "如果你是我......你会怎么选？" },
+      { speaker: "narrator", text: "你沉默了。" },
+      { speaker: "narrator", text: "他不是在问你的建议。他是在问你——" },
+      { speaker: "narrator", text: "你会不会为他考虑。" }
+    ],
+    choices: [
+      {
+        text: "\"我会去。\"",
+        effects: { trust: 10, selfDeception: -5, realityPressure: 5 },
+        nextScene: "d2_xiaolin_personal_honest"
+      },
+      {
+        text: "\"我......不知道。\"",
+        effects: { trust: -5, selfDeception: 5, realityPressure: 5 },
+        nextScene: "d2_xiaolin_personal_ambiguous"
+      }
+    ]
+  },
+
+  d2_xiaolin_personal_ambiguous: {
+    id: "d2_xiaolin_personal_ambiguous",
+    type: "dialogue",
+    location: "你的工位",
+    content: [
+      { speaker: "player", text: "我......不知道。" },
+      { speaker: "narrator", text: "小林看着你，等你说下去。" },
+      { speaker: "narrator", text: "但你没有。" },
+      { speaker: "subordinate", text: "......好。我明白了。" },
+      { speaker: "narrator", text: "他站起身，拍了拍裤子。" },
+      { speaker: "subordinate", text: "那我先去工作了。" },
+      { speaker: "narrator", text: "他走的时候，没有回头。" }
+    ],
+    choices: [
+      { text: "继续", nextScene: "d2_before_hr" }
+    ]
+  },
+
+  // ----------------------------------------
+  // HR场景
+  // ----------------------------------------
+  d2_before_hr: {
+    id: "d2_before_hr",
+    type: "narration",
+    location: "你的工位",
+    content: [
+      "小林走后，你坐了一会儿。",
+      "",
+      "电脑屏幕亮了，弹出一条消息。",
       "",
       "【HR老张：上午有空吗？聊聊。】",
       "",
@@ -2193,16 +2887,138 @@ const SCENES = {
     location: "陈静工位",
     content: [
       { speaker: "narrator", text: "你沉默了几秒。" },
-      { speaker: "player", text: "......我想用它来还原事情的真相。" },
-      { speaker: "colleague", text: "真相？" },
-      { speaker: "colleague", text: "好。" },
-      { speaker: "colleague", text: "我把邮件转发给你。" },
-      { speaker: "narrator", text: "陈静看了看时间。" },
-      { speaker: "colleague", text: "对了，王总下午要开会。" },
-      { speaker: "colleague", text: "可能会宣布一些事情。" }
+      { speaker: "narrator", text: "陈静看着你，像是在等待什么。" },
+      { speaker: "colleague", text: "......我直说了吧。" },
+      { speaker: "colleague", text: "需求变更的记录，我可以给你。" },
+      { speaker: "colleague", text: "而且，我可以帮你整理一份「完整的说明」。" },
+      { speaker: "player", text: "什么意思？" },
+      { speaker: "colleague", text: "意思是——需求变更导致了工期压缩。" },
+      { speaker: "colleague", text: "工期压缩导致了测试不充分。" },
+      { speaker: "colleague", text: "测试不充分导致了bug漏测。" },
+      { speaker: "narrator", text: "陈静的声音很平静。" },
+      { speaker: "colleague", text: "这个逻辑链条里，你的责任......就很小了。" },
+      { speaker: "player", text: "那小林呢？" },
+      { speaker: "colleague", text: "小林发现了bug，但「没有充分跟进」。" },
+      { speaker: "colleague", text: "邮件发过了，但没有当面汇报，没有升级问题。" },
+      { speaker: "narrator", text: "陈静的眼神没有躲闪。" },
+      { speaker: "colleague", text: "公司要的是一个交代。给谁，其实都一样。" },
+      { speaker: "colleague", text: "......" },
+      { speaker: "colleague", text: "蓝海项目的时候，我们也是这样处理的。" },
+      { speaker: "narrator", text: "你知道她的意思。" },
+      { speaker: "narrator", text: "这是一个交易。" },
+      { speaker: "narrator", text: "代价是小林。" }
     ],
     choices: [
-      { text: "......", nextScene: "d2_after_chenjing" }
+      {
+        text: "\"......好。就这么办。\"",
+        hint: "接受交易",
+        effects: { trust: -20, selfDeception: 25, realityPressure: 10 },
+        nextScene: "d2_chenjing_deal"
+      },
+      {
+        text: "\"我不能这么做。小林只是执行了流程。\"",
+        hint: "拒绝牺牲小林",
+        effects: { trust: 10, selfDeception: -10, realityPressure: 5 },
+        nextScene: "d2_chenjing_refuse"
+      },
+      {
+        text: "\"让我想想。\"",
+        hint: "拖延",
+        effects: { trust: 0, selfDeception: 5, realityPressure: 0 },
+        nextScene: "d2_chenjing_delay"
+      }
+    ]
+  },
+
+  d2_chenjing_deal: {
+    id: "d2_chenjing_deal",
+    type: "dialogue",
+    location: "陈静工位",
+    content: [
+      { speaker: "player", text: "......好。就这么办。" },
+      { speaker: "colleague", text: "好。" },
+      { speaker: "narrator", text: "陈静点了点头，像是在确认一笔交易。" },
+      { speaker: "colleague", text: "我今晚就把材料整理好，发给你。" },
+      { speaker: "colleague", text: "明天王总问起来，你就按这个逻辑说。" },
+      { speaker: "narrator", text: "她停了一下。" },
+      { speaker: "colleague", text: "......别想太多。" },
+      { speaker: "colleague", text: "公司要的不是真相，是交代。" },
+      { speaker: "colleague", text: "谁能给的交代更合理，谁就没事。" },
+      { speaker: "narrator", text: "你站起身。" },
+      { speaker: "narrator", text: "忽然觉得有点冷。" }
+    ],
+    choices: [
+      { text: "离开", nextScene: "d2_after_chenjing_deal" }
+    ]
+  },
+
+  d2_after_chenjing_deal: {
+    id: "d2_after_chenjing_deal",
+    type: "narration",
+    location: "走廊",
+    content: [
+      "你走出陈静的工位区。",
+      "",
+      "......",
+      "",
+      "你想起三年前，面试小林的那个下午。",
+      "HR说：「这人学校不行。」",
+      "你说：「他可以的。我来带他。」",
+      "",
+      "现在，你要把他推出去。",
+      "",
+      "......",
+      "",
+      "「公司要的不是真相，是交代。」",
+      "",
+      "你告诉自己：这是现实。大家都是这么做的。",
+      "你告诉自己：你也是为了保护自己。",
+      "你告诉自己：......",
+      "",
+      "你能说服自己吗？"
+    ],
+    choices: [
+      { text: "......", nextScene: "d2_solution" }
+    ]
+  },
+
+  d2_chenjing_refuse: {
+    id: "d2_chenjing_refuse",
+    type: "dialogue",
+    location: "陈静工位",
+    content: [
+      { speaker: "player", text: "我不能这么做。" },
+      { speaker: "player", text: "小林只是执行了流程。他没有错。" },
+      { speaker: "colleague", text: "......" },
+      { speaker: "narrator", text: "陈静看着你，眼神有些意外。" },
+      { speaker: "colleague", text: "你在开玩笑吗？" },
+      { speaker: "colleague", text: "蓝海项目的时候，我们可没这么「正直」。" },
+      { speaker: "player", text: "......" },
+      { speaker: "colleague", text: "行。" },
+      { speaker: "colleague", text: "你要扛，那就扛吧。" },
+      { speaker: "narrator", text: "陈静的声音冷了下来。" },
+      { speaker: "colleague", text: "但别说我没帮你。" },
+      { speaker: "narrator", text: "她转过身，不再看你。" }
+    ],
+    choices: [
+      { text: "离开", nextScene: "d2_after_chenjing" }
+    ]
+  },
+
+  d2_chenjing_delay: {
+    id: "d2_chenjing_delay",
+    type: "dialogue",
+    location: "陈静工位",
+    content: [
+      { speaker: "player", text: "让我想想。" },
+      { speaker: "colleague", text: "......好。" },
+      { speaker: "colleague", text: "但别想太久。" },
+      { speaker: "colleague", text: "王总下午就要开会了。" },
+      { speaker: "narrator", text: "陈静看着你，眼神里有一丝警告。" },
+      { speaker: "colleague", text: "机会不是一直都在的。" }
+    ],
+    choices: [
+      { text: "离开", nextScene: "d2_after_chenjing" }
     ]
   },
 
@@ -2911,3 +3727,5 @@ const GameData = {
   scenes: SCENES,
   endings: ENDINGS
 };
+
+module.exports = GameData;

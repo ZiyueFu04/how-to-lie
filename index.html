@@ -35,7 +35,7 @@
     .game-container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 40px 20px;
+      padding: 40px 20px 120px 20px;
       min-height: 100vh;
     }
 
@@ -86,6 +86,66 @@
     .stat-bar-fill {
       height: 100%;
       transition: width 0.5s ease;
+    }
+
+    /* 底部工具栏 */
+    .toolbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 12, 0.98);
+      border-top: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .toolbar-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .toolbar-btn:hover {
+      color: var(--accent);
+    }
+
+    .toolbar-btn.active {
+      color: var(--accent);
+    }
+
+    .toolbar-icon {
+      font-size: 24px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .toolbar-btn:hover .toolbar-icon {
+      border-color: var(--accent);
+    }
+
+    .toolbar-btn.has-new .toolbar-icon {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(201, 168, 108, 0.3);
     }
 
     /* 开场画面 */
@@ -148,10 +208,6 @@
       color: var(--bg-dark);
     }
 
-    .fade-in {
-      animation: fadeIn 0.5s ease forwards;
-    }
-
     /* 游戏主界面 */
     .game-screen {
       padding-top: 80px;
@@ -177,21 +233,13 @@
     }
 
     /* 叙述内容 */
-    .narrative-text {
-      margin-bottom: 40px;
-    }
-
-    .narrative-text p {
+    .scene-content p.narration {
       color: var(--text-secondary);
       margin-bottom: 16px;
       font-size: 15px;
     }
 
     /* 对话区域 */
-    .dialogue-area {
-      margin-bottom: 40px;
-    }
-
     .dialogue {
       margin-bottom: 16px;
     }
@@ -213,6 +261,74 @@
       padding-left: 12px;
       border-left: 2px solid var(--border);
       color: var(--text-secondary);
+    }
+
+    /* ========== 裂缝效果系统 ========== */
+
+    /* 划线文本 - 表示记忆被篡改 */
+    .crack-strikethrough {
+      color: var(--danger);
+      text-decoration: line-through;
+      text-decoration-color: var(--danger);
+      opacity: 0.5;
+    }
+
+    /* 修正文本 - 显示在划线后面 */
+    .crack-correction {
+      color: var(--danger);
+      font-style: italic;
+      display: inline;
+    }
+    .crack-correction::before {
+      content: " → ";
+      color: var(--danger);
+      opacity: 0.5;
+    }
+
+    /* 模糊文本 - 表示不确定 */
+    .crack-blur {
+      color: transparent;
+      text-shadow: 0 0 8px rgba(232, 230, 227, 0.5);
+    }
+
+    /* 虚假记忆高亮 */
+    .memory-false {
+      color: var(--accent);
+      border-bottom: 1px dashed var(--accent);
+    }
+
+    /* 事实揭示 */
+    .memory-truth {
+      color: var(--danger);
+      font-size: 0.85em;
+      display: block;
+
+    /* 不可靠叙事者 - 揭示文字 */
+    .narrator-reveal {
+      color: var(--danger);
+      font-size: 0.8em;
+      opacity: 0.7;
+      margin-top: 8px;
+      font-style: italic;
+      border-left: 2px solid var(--danger);
+      padding-left: 12px;
+    }
+      margin-top: 4px;
+      padding-left: 12px;
+      border-left: 2px solid var(--danger);
+      opacity: 0;
+      animation: fadeIn 0.5s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    /* 裂缝闪烁效果 */
+    @keyframes crackFlash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .crack-flash {
+      animation: crackFlash 2s ease-in-out infinite;
     }
 
     /* 选项区域 */
@@ -276,6 +392,268 @@
     .effect-item.positive { color: var(--success); }
     .effect-item.negative { color: var(--danger); }
 
+    /* 模态框 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+      font-size: 16px;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    /* 记忆面板 */
+    .memory-item {
+      padding: 15px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .memory-time {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .memory-label {
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .memory-belief {
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .memory-reality {
+      color: var(--danger);
+      font-size: 13px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .memory-reality::before {
+      content: "事实：";
+      color: var(--text-muted);
+    }
+
+    /* 角色面板 */
+    .character-item {
+      display: flex;
+      gap: 15px;
+      padding: 15px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .character-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 4px;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .character-info h4 {
+      font-weight: normal;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .character-info .role {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .character-info .desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* 抉择面板 - 六边形图表 */
+    .hex-chart {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    .hex-chart svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .chart-labels {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .chart-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding: 4px 8px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 3px;
+    }
+
+    .choice-log {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .choice-log-item {
+      padding: 10px;
+      border-left: 2px solid var(--border);
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .choice-log-item .hint {
+      font-size: 11px;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    /* 状态面板 */
+    .status-phase {
+      text-align: center;
+      padding: 30px 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .phase-name {
+      font-size: 24px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      letter-spacing: 4px;
+    }
+
+    .phase-name.stable { color: var(--success); }
+    .phase-name.strained { color: var(--accent); }
+    .phase-name.cracking { color: #e07020; }
+    .phase-name.collapse { color: var(--danger); }
+
+    .phase-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .phase-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .phase-bar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .phase-bar-label {
+      width: 60px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .phase-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .phase-bar-fill {
+      height: 100%;
+      transition: width 0.5s ease;
+    }
+
+    .phase-bar-value {
+      width: 40px;
+      text-align: right;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
     /* 结局画面 */
     .ending-screen {
       text-align: center;
@@ -338,7 +716,11 @@
       }
 
       .game-container {
-        padding: 20px 15px;
+        padding: 20px 15px 120px 15px;
+      }
+
+      .toolbar {
+        gap: 20px;
       }
     }
   </style>
@@ -369,6 +751,26 @@
     </div>
   </div>
 
+  <!-- 底部工具栏 -->
+  <div class="toolbar hidden" id="toolbar">
+    <button class="toolbar-btn" id="btn-memory" onclick="Game.showModal('memory')">
+      <div class="toolbar-icon">◈</div>
+      <span>记忆</span>
+    </button>
+    <button class="toolbar-btn" id="btn-characters" onclick="Game.showModal('characters')">
+      <div class="toolbar-icon">◊</div>
+      <span>角色</span>
+    </button>
+    <button class="toolbar-btn" id="btn-choices" onclick="Game.showModal('choices')">
+      <div class="toolbar-icon">⬡</div>
+      <span>抉择</span>
+    </button>
+    <button class="toolbar-btn" id="btn-status" onclick="Game.showModal('status')">
+      <div class="toolbar-icon">○</div>
+      <span>状态</span>
+    </button>
+  </div>
+
   <div class="game-container">
     <!-- 开场画面 -->
     <div class="intro-screen" id="introScreen">
@@ -393,10 +795,21 @@
     </div>
   </div>
 
+  <!-- 模态框 -->
+  <div class="modal-overlay" id="modalOverlay" onclick="if(event.target === this) Game.closeModal()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle"></div>
+        <button class="modal-close" onclick="Game.closeModal()">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
   <script src="game-data.js"></script>
   <script>
     // ============================================
-    // 《巧言令色》游戏引擎 v3.0
+    // 《巧言令色》游戏引擎 v5.0 - 动态裂缝系统
     // ============================================
 
     const Game = {
@@ -409,12 +822,18 @@
       pathType: null,
       currentScene: null,
       dialogueIndex: 0,
+      choiceHistory: [],
+      memories: [],
+      lies: [], // 记录所有的谎言
+      stabilityState: 'stable',
+      sceneCount: 0,
 
       elements: {},
 
       init() {
         this.elements = {
           statsBar: document.getElementById('statsBar'),
+          toolbar: document.getElementById('toolbar'),
           introScreen: document.getElementById('introScreen'),
           introText: document.getElementById('introText'),
           startBtn: document.getElementById('startBtn'),
@@ -431,13 +850,20 @@
           pressureValue: document.getElementById('pressureValue'),
           trustBar: document.getElementById('trustBar'),
           deceptionBar: document.getElementById('deceptionBar'),
-          pressureBar: document.getElementById('pressureBar')
+          pressureBar: document.getElementById('pressureBar'),
+          modalOverlay: document.getElementById('modalOverlay'),
+          modalTitle: document.getElementById('modalTitle'),
+          modalBody: document.getElementById('modalBody'),
+          btnMemory: document.getElementById('btn-memory'),
+          btnChoices: document.getElementById('btn-choices')
         };
 
         this.showIntro();
         this.elements.startBtn.addEventListener('click', () => this.startGame());
         this.elements.restartBtn.addEventListener('click', () => this.restart());
       },
+
+      // ========== 开场 ==========
 
       showIntro() {
         const intro = GameData.config.intro;
@@ -446,7 +872,6 @@
         intro.forEach((line, index) => {
           const p = document.createElement('p');
           p.textContent = line;
-          p.style.animationDelay = `${index * 0.3}s`;
           container.appendChild(p);
           setTimeout(() => p.classList.add('show'), index * 300 + 100);
         });
@@ -456,24 +881,332 @@
         }, intro.length * 300 + 800);
       },
 
+      // ========== 游戏流程 ==========
+
       startGame() {
         this.elements.introScreen.classList.add('hidden');
         this.elements.statsBar.classList.remove('hidden');
+        this.elements.toolbar.classList.remove('hidden');
         this.elements.gameScreen.classList.remove('hidden');
 
         this.stats = { trust: 50, selfDeception: 0, realityPressure: 0 };
         this.flags = {};
         this.pathType = null;
+        this.choiceHistory = [];
+        this.memories = [];
+        this.lies = [];
+        this.stabilityState = 'stable';
+        this.sceneCount = 0;
         this.updateStatsDisplay();
 
         this.loadScene('intro');
       },
+
+      // ========== 稳定性状态 ==========
+
+      getStabilityState() {
+        const { selfDeception, realityPressure } = this.stats;
+        const instability = selfDeception + realityPressure * 0.5;
+
+        if (instability >= 80) return 'collapse';
+        if (instability >= 50) return 'cracking';
+        if (instability >= 25) return 'strained';
+        return 'stable';
+      },
+
+      getStabilityInfo() {
+        const states = {
+          stable: {
+            name: '稳定',
+            desc: '你的叙事仍然自洽。你知道自己在说什么。',
+            color: 'stable'
+          },
+          strained: {
+            name: '动摇',
+            desc: '有些事情开始对不上。但你还能解释。',
+            color: 'strained'
+          },
+          cracking: {
+            name: '裂痕',
+            desc: '你的记忆开始出现矛盾。哪些是真的？',
+            color: 'cracking'
+          },
+          collapse: {
+            name: '崩塌',
+            desc: '叙事无法维持。你不知道该相信什么了。',
+            color: 'collapse'
+          }
+        };
+        return states[this.stabilityState];
+      },
+
+      // ========== 记忆回响系统 ==========
+
+      memoryEchoShown: [],
+
+      checkMemoryEcho(sceneId) {
+        // 检查是否有角色记忆需要显示
+        if (typeof CHARACTER_MEMORIES === 'undefined') return;
+
+        for (const [key, memory] of Object.entries(CHARACTER_MEMORIES)) {
+          if (memory.trigger === sceneId && !this.memoryEchoShown.includes(key)) {
+            this.memoryEchoShown.push(key);
+            this.showMemoryEcho(memory.content);
+            return;
+          }
+        }
+      },
+
+      showMemoryEcho(content) {
+        // 创建一个临时的记忆回响显示
+        const echoDiv = document.createElement('div');
+        echoDiv.className = 'memory-echo';
+        echoDiv.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(10, 10, 12, 0.98);
+          border: 1px solid var(--accent);
+          padding: 40px;
+          max-width: 400px;
+          z-index: 300;
+          opacity: 0;
+          transition: opacity 0.5s ease;
+        `;
+
+        const innerHtml = `
+          <div style="font-size: 12px; color: var(--accent); letter-spacing: 2px; margin-bottom: 20px;">记忆回响</div>
+          <div style="color: var(--text-secondary); line-height: 2;">
+            ${content.map(line => line ? `<p style="margin-bottom: 12px;">${line}</p>` : '<p style="margin-bottom: 8px;"></p>').join('')}
+          </div>
+          <button style="
+            margin-top: 30px;
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-muted);
+            padding: 10px 30px;
+            cursor: pointer;
+            font-family: inherit;
+          " onclick="Game.closeMemoryEcho()">继续</button>
+        `;
+
+        echoDiv.innerHTML = innerHtml;
+        document.body.appendChild(echoDiv);
+
+        // 淡入
+        setTimeout(() => echoDiv.style.opacity = '1', 50);
+      },
+
+      closeMemoryEcho() {
+        const echoDiv = document.querySelector('.memory-echo');
+        if (echoDiv) {
+          echoDiv.style.opacity = '0';
+          setTimeout(() => echoDiv.remove(), 500);
+        }
+      },
+
+      // ========== 谎言记录系统 ==========
+
+      // 记录一个谎言
+      recordLie(choice) {
+        const truth = this.generateTruth(choice);
+
+        // 去重：检查是否已经记录过相同的"事实"
+        const existingLie = this.lies.find(l => l.truth === truth);
+        if (existingLie) {
+          // 已存在相同的谎言类型，只更新强度，不重复记录
+          existingLie.strength += choice.effects?.selfDeception || 0;
+          return;
+        }
+
+        const lie = {
+          id: this.lies.length,
+          // 玩家说的话
+          statement: choice.text,
+          // 对应的事实
+          truth: truth,
+          // 触发条件：文本中包含这些词时，会触发裂缝效果
+          triggers: this.extractTriggers(choice.text),
+          // 自欺程度
+          strength: choice.effects?.selfDeception || 0,
+          // 记录时间
+          sceneCount: this.sceneCount
+        };
+
+        this.lies.push(lie);
+
+        // 同时记录到记忆系统
+        this.memories.push({
+          belief: choice.text,
+          truth: lie.truth,
+          time: this.sceneCount
+        });
+
+        // 更新UI
+        this.elements.btnMemory.classList.add('has-new');
+      },
+
+      // 根据选择生成对应的"事实"
+      generateTruth(choice) {
+        const hint = choice.hint || '';
+        const text = choice.text;
+
+        // 谎言类型 -> 事实映射
+        const truthMap = {
+          '时间线解释': '邮件记录显示你两周前就收到了',
+          '责任归属': '小林按时提交了报告，你没有跟进',
+          '框架重构': '立项报告中没有提到这些风险',
+          '转移焦点': '王总在会议记录中明确追问了责任',
+          '系统归因': '其他项目经理在相同条件下没有出问题',
+          '信息过载辩护': '邮件标题包含【紧急】字样',
+          '装傻': '邮件系统有已读回执',
+          '暗示施压': '小林保留了完整的沟通记录',
+          '选择性遗忘': '发送记录和阅读回执都存在'
+        };
+
+        // 检查是否匹配已知的谎言类型
+        for (const [key, truth] of Object.entries(truthMap)) {
+          if (hint.includes(key) || text.includes(key)) {
+            return truth;
+          }
+        }
+
+        // 默认：根据选择内容推断
+        if (text.includes('不知道') || text.includes('不记得')) {
+          return '有书面记录证明你知情';
+        }
+        if (text.includes('不是') && text.includes('责任')) {
+          return '项目日志显示你是最终决策者';
+        }
+        if (text.includes('系统') || text.includes('流程')) {
+          return '你的 predecessors 在同样流程下没有出问题';
+        }
+
+        // 不匹配任何已知类型时，返回 null（不显示裂缝效果）
+        return null;
+      },
+
+      // 从文本中提取触发词
+      extractTriggers(text) {
+        // 移除标点，分词
+        const cleanText = text.replace(/[「」『』【】《》""''，。！？、]/g, ' ');
+        const words = cleanText.split(/\s+/).filter(w => w.length >= 2);
+
+        // 返回关键词
+        return words.slice(0, 3);
+      },
+
+      // ========== 动态文本处理 ==========
+
+      processText(text) {
+        let processedText = text;
+        const state = this.stabilityState;
+
+        // 不可靠叙事者：根据心理状态扭曲旁白文本
+        processedText = this.applyUnreliableNarrator(processedText, state);
+
+        // 裂缝效果：只在 strained 及以上状态显示
+        if (state === 'stable' || this.lies.length === 0) {
+          return processedText;
+        }
+
+        // 遍历所有谎言，检查是否有触发词匹配
+        for (const lie of this.lies) {
+          for (const trigger of lie.triggers) {
+            if (processedText.includes(trigger)) {
+              processedText = this.applyCrackEffect(processedText, trigger, lie, state);
+              break;
+            }
+          }
+        }
+
+        return processedText;
+      },
+
+      // 不可靠叙事者：旁白会根据心理状态"美化"现实
+      applyUnreliableNarrator(text, state) {
+        // 只在 strained 及以上状态才扭曲
+        if (state === 'stable') {
+          return text;
+        }
+
+        // 定义叙事扭曲规则
+        const distortions = [
+          // 原文 -> 扭曲版本（自欺程度越高，越美化）
+          { original: '看起来有些犹豫', strained: '在思考', cracking: '理解你的处境', collapse: '支持你的决定', reveal: '他没有说话。' },
+          { original: '沉默了几秒', strained: '点了点头', cracking: '表示同意', collapse: '完全理解', reveal: '他什么都没说。' },
+          { original: '表情有些复杂', strained: '似乎在考虑', cracking: '站在你这边', collapse: '完全信任你', reveal: '他的眼神在躲闪。' },
+          { original: '没有说话', strained: '没有反对', cracking: '默许了', collapse: '完全认同', reveal: '——他从头到尾都没说话。' },
+          { original: '低着头', strained: '在沉思', cracking: '理解了你的难处', collapse: '支持你的选择', reveal: '他不敢看你。' },
+          { original: '眼神有些复杂', strained: '眼神中带着理解', cracking: '眼神中表示支持', collapse: '眼神中充满信任', reveal: '他的眼神里有失望。' },
+        ];
+
+        let result = text;
+        let addedReveal = false;
+
+        for (const d of distortions) {
+          if (result.includes(d.original)) {
+            let replacement;
+            if (state === 'strained') {
+              replacement = d.strained;
+            } else if (state === 'cracking') {
+              replacement = d.cracking;
+            } else if (state === 'collapse') {
+              replacement = d.collapse;
+            }
+            result = result.replace(d.original, replacement);
+
+            // 在 cracking 和 collapse 状态下，添加揭示文字
+            if ((state === 'cracking' || state === 'collapse') && !addedReveal && d.reveal) {
+              result += `</p><p class="narrator-reveal">${d.reveal}`;
+              addedReveal = true;
+            }
+          }
+        }
+
+        return result;
+      },
+
+      // 应用裂缝效果
+      applyCrackEffect(text, trigger, lie, state) {
+        // 如果没有对应的真相，不显示裂缝效果
+        if (!lie.truth) {
+          return text;
+        }
+
+        // 根据状态和谎言强度决定效果强度
+        const showTruth = state === 'cracking' || state === 'collapse';
+        const showStrike = state === 'cracking' || state === 'collapse';
+
+        // 构建替换内容
+        let replacement;
+
+        if (showStrike && showTruth) {
+          // 划掉原词，显示事实
+          replacement = `<span class="crack-strikethrough">${trigger}</span><span class="crack-correction">${lie.truth}</span>`;
+        } else if (showStrike) {
+          // 只划掉
+          replacement = `<span class="crack-strikethrough">${trigger}</span>`;
+        } else {
+          // strained 状态：只是高亮
+          replacement = `<span class="memory-false">${trigger}</span>`;
+        }
+
+        // 只替换第一个匹配（避免过度替换）
+        return text.replace(trigger, replacement);
+      },
+
+      // ========== 场景加载 ==========
 
       loadScene(sceneId) {
         if (sceneId === 'ending_final' || sceneId === 'ending_transition' || sceneId === 'ending_tributary') {
           this.determineEnding();
           return;
         }
+
+        // 检查是否需要显示角色记忆
+        this.checkMemoryEcho(sceneId);
 
         const scene = GameData.scenes[sceneId];
         if (!scene) {
@@ -483,6 +1216,10 @@
 
         this.currentScene = scene;
         this.dialogueIndex = 0;
+        this.sceneCount++;
+
+        // 更新稳定性状态
+        this.stabilityState = this.getStabilityState();
 
         if (scene.location) {
           this.elements.locationTag.textContent = scene.location;
@@ -503,11 +1240,13 @@
         }
       },
 
+      // ========== 叙述/对话显示 ==========
+
       showNarration(scene) {
         scene.content.forEach(line => {
           const p = document.createElement('p');
           p.className = 'narration';
-          p.textContent = line;
+          p.innerHTML = this.processText(line);
           this.elements.sceneContent.appendChild(p);
         });
         this.showChoices(scene.choices);
@@ -539,7 +1278,7 @@
 
         const text = document.createElement('div');
         text.className = 'dialogue-text';
-        text.textContent = dialogue.text;
+        text.innerHTML = this.processText(dialogue.text);
 
         div.appendChild(speaker);
         div.appendChild(text);
@@ -563,17 +1302,48 @@
         }
       },
 
+      // ========== 选项 ==========
+
       showChoices(choices) {
         this.elements.choicesArea.innerHTML = '';
+
+        // 获取当前语言抽象化层级
+        const langLevel = typeof LANGUAGE_ABSTRACTION !== 'undefined'
+          ? LANGUAGE_ABSTRACTION.getLevel(this.stats.selfDeception)
+          : 'concrete';
 
         choices.forEach((choice) => {
           const btn = document.createElement('button');
           btn.className = 'choice-btn';
 
-          let btnContent = `<div>${choice.text}</div>`;
+          // 根据 selfDeception 值动态调整文本
+          let displayText = choice.text;
+
+          // 语言抽象化：如果有 abstractText 字段，根据 selfDeception 层级选择对应文本
+          if (choice.abstractText) {
+            // 直接根据层级获取文本
+            if (choice.abstractText[langLevel]) {
+              displayText = choice.abstractText[langLevel];
+            }
+          }
+
+          let btnContent = `<div>${displayText}</div>`;
 
           if (choice.hint) {
             btnContent += `<div class="choice-hint">「${choice.hint}」</div>`;
+          }
+
+          // 显示语言抽象化层级提示（仅在高级别时显示）
+          if (langLevel !== 'concrete' && choice.abstractText) {
+            const levelNames = {
+              external: '外部归因',
+              systemic: '系统归因',
+              abstract: '抽象辩护',
+              grandiose: '宏大叙事'
+            };
+            if (levelNames[langLevel]) {
+              btnContent += `<div class="language-level-hint" style="font-size: 10px; color: var(--accent); margin-top: 4px; opacity: 0.6;">[ ${levelNames[langLevel]} ]</div>`;
+            }
           }
 
           if (choice.effects) {
@@ -599,6 +1369,20 @@
       },
 
       selectChoice(choice) {
+        // 记录选择
+        this.choiceHistory.push({
+          text: choice.text,
+          hint: choice.hint,
+          effects: choice.effects
+        });
+
+        this.elements.btnChoices.classList.add('has-new');
+
+        // 如果是自欺选择，记录谎言
+        if (choice.effects?.selfDeception > 5) {
+          this.recordLie(choice);
+        }
+
         if (choice.flag) {
           this.flags[choice.flag] = true;
 
@@ -643,7 +1427,7 @@
 
             const text = document.createElement('div');
             text.className = 'dialogue-text';
-            text.textContent = dialogue.text;
+            text.innerHTML = this.processText(dialogue.text);
 
             div.appendChild(speaker);
             div.appendChild(text);
@@ -665,6 +1449,8 @@
         });
       },
 
+      // ========== 效果处理 ==========
+
       applyEffects(effects) {
         for (const [key, value] of Object.entries(effects)) {
           if (key === 'trust') {
@@ -675,6 +1461,8 @@
             this.stats.realityPressure = Math.max(0, Math.min(100, this.stats.realityPressure + value));
           }
         }
+
+        this.stabilityState = this.getStabilityState();
         this.updateStatsDisplay();
       },
 
@@ -692,47 +1480,339 @@
         this.elements.pressureValue.className = `stat-value ${this.stats.realityPressure > 50 ? 'negative' : ''}`;
       },
 
+      // ========== 模态框 ==========
+
+      showModal(type) {
+        const titles = {
+          memory: '记忆碎片',
+          characters: '人物档案',
+          choices: '抉择记录',
+          status: '心理状态'
+        };
+
+        this.elements.modalTitle.textContent = titles[type];
+        this.elements.modalBody.innerHTML = this.generateModalContent(type);
+        this.elements.modalOverlay.classList.add('show');
+
+        if (type === 'memory') this.elements.btnMemory.classList.remove('has-new');
+        if (type === 'choices') this.elements.btnChoices.classList.remove('has-new');
+      },
+
+      closeModal() {
+        this.elements.modalOverlay.classList.remove('show');
+      },
+
+      generateModalContent(type) {
+        switch(type) {
+          case 'memory':
+            return this.generateMemoryContent();
+          case 'characters':
+            return this.generateCharactersContent();
+          case 'choices':
+            return this.generateChoicesContent();
+          case 'status':
+            return this.generateStatusContent();
+          default:
+            return '';
+        }
+      },
+
+      generateMemoryContent() {
+        if (this.memories.length === 0) {
+          return '<p style="color: var(--text-muted); text-align: center;">暂无记忆碎片</p>';
+        }
+
+        const showTruth = this.stabilityState === 'cracking' || this.stabilityState === 'collapse';
+
+        return this.memories.map(m => {
+          // 只有在有truth且不是null时才显示
+          const truthHtml = (showTruth && m.truth) ? `<div class="memory-reality">${m.truth}</div>` : '';
+          return `
+            <div class="memory-item">
+              <div class="memory-time">第 ${m.time} 幕</div>
+              <div class="memory-label">你相信的</div>
+              <div class="memory-belief">${m.belief}</div>
+              ${truthHtml}
+            </div>
+          `;
+        }).join('');
+      },
+
+      generateCharactersContent() {
+        const chars = GameData.characters;
+        const avatars = {
+          player: '你',
+          boss: '王',
+          subordinate: '林',
+          colleague: '陈',
+          hr: '张'
+        };
+
+        // 检查角色是否已"解锁"（在游戏中出现过）
+        const unlocked = {
+          player: true,
+          boss: this.sceneCount > 1,
+          subordinate: this.sceneCount > 3,
+          colleague: this.sceneCount > 5,
+          hr: this.sceneCount > 8
+        };
+
+        return Object.entries(chars).filter(([key]) => key !== 'narrator').map(([key, char]) => {
+          if (!unlocked[key]) {
+            return `
+              <div class="character-item" style="opacity: 0.4;">
+                <div class="character-avatar">?</div>
+                <div class="character-info">
+                  <h4 style="color: var(--text-muted)">未解锁</h4>
+                  <div class="role">继续游戏以解锁</div>
+                </div>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="character-item">
+              <div class="character-avatar" style="color: ${char.color}">${avatars[key] || '?'}</div>
+              <div class="character-info">
+                <h4 style="color: ${char.color || 'var(--text-primary)'}">${char.name}${char.fullName ? ` · ${char.fullName}` : ''}</h4>
+                <div class="role">${char.title}</div>
+                ${char.relationship ? `<div class="desc" style="color: var(--accent); font-style: italic; margin-top: 8px;">${char.relationship}</div>` : ''}
+                ${char.memory ? `<div class="desc" style="color: var(--text-muted); margin-top: 6px; font-size: 12px;">${char.memory}</div>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      generateChoicesContent() {
+        const hexData = this.calculateHexData();
+
+        let html = `
+          <div class="hex-chart">
+            <svg viewBox="0 0 200 200">
+              <polygon points="100,20 170,55 170,125 100,160 30,125 30,55"
+                       fill="none" stroke="var(--border)" stroke-width="1"/>
+              <polygon points="100,40 150,65 150,115 100,140 50,115 50,65"
+                       fill="none" stroke="var(--border)" stroke-width="1" opacity="0.5"/>
+              <polygon points="${this.getHexPoints(hexData)}"
+                       fill="rgba(201,168,108,0.2)" stroke="var(--accent)" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="chart-labels">
+            <span class="chart-label">诚实 ${hexData.honesty}%</span>
+            <span class="chart-label">推责 ${hexData.deflection}%</span>
+            <span class="chart-label">自欺 ${hexData.deception}%</span>
+            <span class="chart-label">合作 ${hexData.cooperation}%</span>
+            <span class="chart-label">回避 ${hexData.avoidance}%</span>
+            <span class="chart-label">操纵 ${hexData.manipulation}%</span>
+          </div>
+        `;
+
+        if (this.choiceHistory.length > 0) {
+          html += `
+            <div class="choice-log" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
+              ${this.choiceHistory.slice(-5).map(c => `
+                <div class="choice-log-item">
+                  ${c.text}
+                  ${c.hint ? `<div class="hint">「${c.hint}」</div>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        return html;
+      },
+
+      calculateHexData() {
+        let data = {
+          honesty: 50,
+          deflection: 50,
+          deception: 50,
+          cooperation: 50,
+          avoidance: 50,
+          manipulation: 50
+        };
+
+        this.choiceHistory.forEach(c => {
+          if (c.effects) {
+            if (c.effects.selfDeception < 0) data.honesty += 10;
+            if (c.effects.selfDeception > 10) data.deception += 10;
+            if (c.effects.trust < -5) data.deflection += 10;
+            if (c.effects.trust > 5) data.cooperation += 10;
+            if (c.effects.realityPressure > 10) data.avoidance += 10;
+            if (c.effects.trust < -10) data.manipulation += 10;
+          }
+        });
+
+        Object.keys(data).forEach(key => {
+          data[key] = Math.min(100, Math.max(0, data[key]));
+        });
+
+        return data;
+      },
+
+      getHexPoints(data) {
+        const center = 100;
+        const maxR = 70;
+        const angles = [-90, -30, 30, 90, 150, 210].map(a => a * Math.PI / 180);
+        const values = [data.honesty, data.deflection, data.deception,
+                       data.cooperation, data.avoidance, data.manipulation];
+
+        return angles.map((angle, i) => {
+          const r = maxR * (values[i] / 100);
+          const x = center + r * Math.cos(angle);
+          const y = center + r * Math.sin(angle);
+          return `${x},${y}`;
+        }).join(' ');
+      },
+
+      generateStatusContent() {
+        const info = this.getStabilityInfo();
+
+        return `
+          <div class="status-phase">
+            <div class="phase-name ${info.color}">${info.name}</div>
+            <div class="phase-desc">${info.desc}</div>
+          </div>
+          <div class="phase-bars">
+            <div class="phase-bar-item">
+              <span class="phase-bar-label">信任</span>
+              <div class="phase-bar">
+                <div class="phase-bar-fill" style="width: ${this.stats.trust}%; background: var(--success);"></div>
+              </div>
+              <span class="phase-bar-value">${this.stats.trust}</span>
+            </div>
+            <div class="phase-bar-item">
+              <span class="phase-bar-label">自欺</span>
+              <div class="phase-bar">
+                <div class="phase-bar-fill" style="width: ${this.stats.selfDeception}%; background: var(--accent);"></div>
+              </div>
+              <span class="phase-bar-value">${this.stats.selfDeception}</span>
+            </div>
+            <div class="phase-bar-item">
+              <span class="phase-bar-label">矛盾</span>
+              <div class="phase-bar">
+                <div class="phase-bar-fill" style="width: ${this.stats.realityPressure}%; background: var(--danger);"></div>
+              </div>
+              <span class="phase-bar-value">${this.stats.realityPressure}</span>
+            </div>
+          </div>
+        `;
+      },
+
+      // ========== 结局 ==========
+
       determineEnding() {
         const { trust, selfDeception, realityPressure } = this.stats;
         const path = this.pathType;
         let endingId;
 
-        if (path === 'honest' || selfDeception < 20) {
-          if (trust >= 30) {
-            endingId = 'honest_redemption';
-          } else {
-            endingId = 'honest_fired';
-          }
-        } else if (path === 'deception' || selfDeception >= 50) {
-          if (realityPressure >= 40) {
-            endingId = 'deception_exposed';
-          } else {
-            endingId = 'deception_cocoon';
-          }
-        } else if (path === 'gray' || (selfDeception >= 20 && selfDeception < 50)) {
-          if (trust >= 20) {
-            endingId = 'gray_peace';
-          } else {
-            endingId = 'gray_compromise';
-          }
+        if (this.stabilityState === 'collapse' && realityPressure >= 60) {
+          endingId = 'collapse_ending';
+        } else if (selfDeception >= 70 && selfDeception > realityPressure) {
+          endingId = 'propaganda_ending';
+        } else if (selfDeception < 30 && path === 'honest') {
+          endingId = 'acceptance_ending';
         } else {
-          endingId = 'lost_drift';
+          if (path === 'honest' || selfDeception < 20) {
+            endingId = trust >= 30 ? 'honest_redemption' : 'honest_fired';
+          } else if (path === 'deception' || selfDeception >= 50) {
+            endingId = realityPressure >= 40 ? 'deception_exposed' : 'deception_cocoon';
+          } else {
+            endingId = trust >= 20 ? 'gray_peace' : 'gray_compromise';
+          }
         }
 
         this.loadEnding(endingId);
       },
 
       loadEnding(endingId) {
-        const ending = GameData.endings[endingId];
+        const specialEndings = {
+          collapse_ending: {
+            title: '结局：崩塌',
+            content: [
+              '我不知道该怎么解释。',
+              '',
+              '所有的叙事都碎了。',
+              '你说的每一句话，都有另一个版本在脑子里尖叫。',
+              '',
+              '王总看着你，等着一个答案。',
+              '你张开嘴，却什么都说不出来。',
+              '',
+              '......',
+              '',
+              '你被辞退了。',
+              '但更糟的是——你不知道，哪些记忆是真的。',
+              '',
+              '【结局：崩塌】',
+              '叙事无法维持。你被现实击穿。'
+            ]
+          },
+          propaganda_ending: {
+            title: '结局：完美叙事',
+            content: [
+              '历史会证明我是对的。',
+              '',
+              '你走出王总办公室，脚步轻快。',
+              '',
+              '那两封邮件？你没看到。',
+              '那个bug？团队的责任。',
+              '项目失败？系统性问题。',
+              '',
+              '你已经说服了自己。',
+              '既然连自己都相信了，别人又怎么会怀疑呢？',
+              '',
+              '你保住了工作。',
+              '你保住了自己。',
+              '',
+              '......',
+              '',
+              '只是有时候，在深夜醒来，',
+              '你会想起一些模糊的东西。',
+              '但你很快就忘记了。',
+              '',
+              '【结局：完美叙事】',
+              '你把叙事推到了极致。包括你自己。'
+            ]
+          },
+          acceptance_ending: {
+            title: '结局：承认',
+            content: [
+              '也许事情就是这么简单。',
+              '',
+              '你做错了。',
+              '你没处理那两封邮件。',
+              '你忘了。',
+              '',
+              '......',
+              '',
+              '说出来之后，你感到一阵轻松。',
+              '不是解脱，只是——不再需要记两个版本了。',
+              '',
+              '王总说：我会处理的。',
+              '',
+              '你不知道结果会是什么。',
+              '但至少，你知道自己说了什么。',
+              '',
+              '【结局：承认】',
+              '你主动停止了叙事。面对了现实。'
+            ]
+          }
+        };
+
+        let ending = specialEndings[endingId] || GameData.endings[endingId];
+
         if (!ending) {
-          console.error('Ending not found:', endingId);
-          return;
+          ending = GameData.endings['lost_drift'];
         }
+
         this.showEnding(ending);
       },
 
       showEnding(scene) {
         this.elements.gameScreen.classList.add('hidden');
+        this.elements.toolbar.classList.add('hidden');
         this.elements.endingScreen.classList.remove('hidden');
 
         this.elements.endingTitle.textContent = scene.title;
@@ -749,6 +1829,11 @@
         this.stats = { trust: 50, selfDeception: 0, realityPressure: 0 };
         this.flags = {};
         this.pathType = null;
+        this.choiceHistory = [];
+        this.memories = [];
+        this.lies = [];
+        this.stabilityState = 'stable';
+        this.sceneCount = 0;
         this.updateStatsDisplay();
 
         this.elements.endingScreen.classList.add('hidden');
